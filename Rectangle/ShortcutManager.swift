@@ -232,6 +232,23 @@ class ShortcutManager {
         defer { if !completionHandledByWindowManager { originalParameters.completion?() } }
         Notification.Name.windowActionWillExecute.post(object: parameters)
 
+        if parameters.action == .snapLayoutPicker {
+            guard let windowElement = parameters.windowElement ?? AccessibilityElement.getFrontWindowElement() else {
+                NSSound.beep()
+                return
+            }
+            let windowId = parameters.windowId ?? windowElement.getWindowId()
+            SnapLayoutPickerPanel.shared.show { [weak self] selectedAction in
+                self?.execute(ExecutionParameters(
+                    selectedAction,
+                    windowElement: windowElement,
+                    windowId: windowId,
+                    source: parameters.source
+                ))
+            }
+            return
+        }
+
         if Defaults.restoreThenMinimize.enabled != false,
            parameters.action == .restore,
            let windowElement = parameters.windowElement ?? AccessibilityElement.getFrontWindowElement(),
@@ -505,5 +522,138 @@ struct ShortcutCycle {
     static func isStale(lastAction: RectangleAction?, currentWindowRect: CGRect?) -> Bool {
         guard let lastAction, let currentWindowRect else { return false }
         return currentWindowRect != lastAction.rect
+    }
+}
+
+
+/// A lightweight native picker that routes a selected layout through the existing
+/// window-action pipeline. The focused window is captured before the panel appears.
+private final class SnapLayoutPickerPanel: NSPanel {
+    static let shared = SnapLayoutPickerPanel()
+
+    private var selectionHandler: ((WindowAction) -> Void)?
+
+    private init() {
+        super.init(contentRect: NSRect(x: 0, y: 0, width: 560, height: 400),
+                   styleMask: [.titled, .closable, .nonactivatingPanel],
+                   backing: .buffered,
+                   defer: false)
+        title = String(localized: "Snap Layouts")
+        isFloatingPanel = true
+        level = .floating
+        hidesOnDeactivate = false
+        collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        isReleasedWhenClosed = false
+        contentView = makeContentView()
+    }
+
+    override var canBecomeKey: Bool { true }
+    override var canBecomeMain: Bool { false }
+
+    func show(onSelection: @escaping (WindowAction) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            selectionHandler = onSelection
+            let mouseLocation = NSEvent.mouseLocation
+            let screen = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) }) ?? NSScreen.main
+            if let screen {
+                setFrameOrigin(NSPoint(x: screen.visibleFrame.midX - frame.width / 2,
+                                       y: screen.visibleFrame.midY - frame.height / 2))
+            }
+            makeKeyAndOrderFront(nil)
+        }
+    }
+
+    private func makeContentView() -> NSView {
+        let root = NSStackView()
+        root.orientation = .vertical
+        root.alignment = .leading
+        root.spacing = 14
+        root.edgeInsets = NSEdgeInsets(top: 18, left: 20, bottom: 18, right: 20)
+
+        let subtitle = NSTextField(labelWithString: String(localized: "Choose where to place the front window"))
+        subtitle.textColor = .secondaryLabelColor
+        root.addArrangedSubview(subtitle)
+
+        addRow(title: String(localized: "Halves"), actions: [
+            (.leftHalf, "Left half", "rectangle.lefthalf.filled"),
+            (.rightHalf, "Right half", "rectangle.righthalf.filled"),
+            (.topHalf, "Top half", "rectangle.tophalf.filled"),
+            (.bottomHalf, "Bottom half", "rectangle.bottomhalf.filled")
+        ], to: root)
+
+        addRow(title: String(localized: "Quarters"), actions: [
+            (.topLeft, "Top left", "rectangle.topthird.inset.filled"),
+            (.topRight, "Top right", "rectangle.topthird.inset.filled"),
+            (.bottomLeft, "Bottom left", "rectangle.bottomthird.inset.filled"),
+            (.bottomRight, "Bottom right", "rectangle.bottomthird.inset.filled")
+        ], to: root)
+
+        addRow(title: String(localized: "Thirds"), actions: [
+            (.firstThird, "Left third", "rectangle.lefthalf.inset.filled"),
+            (.centerThird, "Center third", "rectangle.center.inset.filled"),
+            (.lastThird, "Right third", "rectangle.righthalf.inset.filled")
+        ], to: root)
+
+        addRow(title: String(localized: "Two-thirds"), actions: [
+            (.firstTwoThirds, "Left two-thirds", "rectangle.lefthalf.filled"),
+            (.centerTwoThirds, "Center two-thirds", "rectangle.center.inset.filled"),
+            (.lastTwoThirds, "Right two-thirds", "rectangle.righthalf.filled")
+        ], to: root)
+
+        let cancel = NSButton(title: String(localized: "Cancel"), target: self, action: #selector(cancelSelection))
+        cancel.bezelStyle = .rounded
+        let footer = NSStackView(views: [NSView(), cancel])
+        footer.orientation = .horizontal
+        footer.distribution = .fill
+        footer.alignment = .centerY
+        root.addArrangedSubview(footer)
+        root.widthAnchor.constraint(equalToConstant: 560).isActive = true
+
+        let container = NSView()
+        root.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(root)
+        NSLayoutConstraint.activate([
+            root.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            root.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            root.topAnchor.constraint(equalTo: container.topAnchor),
+            root.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+        return container
+    }
+
+    private func addRow(title: String, actions: [(WindowAction, String, String)], to root: NSStackView) {
+        let label = NSTextField(labelWithString: title)
+        label.font = .boldSystemFont(ofSize: 13)
+        root.addArrangedSubview(label)
+
+        let row = NSStackView()
+        row.orientation = .horizontal
+        row.distribution = .fillEqually
+        row.spacing = 8
+        for (action, title, symbol) in actions {
+            let button = NSButton(title: title, target: self, action: #selector(selectLayout(_:)))
+            button.tag = action.rawValue
+            button.bezelStyle = .rounded
+            button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: title)
+            button.imagePosition = .imageAbove
+            button.setButtonType(.momentaryPushIn)
+            button.heightAnchor.constraint(equalToConstant: 58).isActive = true
+            row.addArrangedSubview(button)
+        }
+        root.addArrangedSubview(row)
+    }
+
+    @objc private func selectLayout(_ sender: NSButton) {
+        guard let action = WindowAction(rawValue: sender.tag) else { return }
+        let selection = selectionHandler
+        selectionHandler = nil
+        orderOut(nil)
+        selection?(action)
+    }
+
+    @objc private func cancelSelection() {
+        selectionHandler = nil
+        orderOut(nil)
     }
 }

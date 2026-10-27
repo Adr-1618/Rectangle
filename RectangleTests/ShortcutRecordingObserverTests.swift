@@ -340,7 +340,7 @@ final class WindowsQuickSnapDefaultsTests: XCTestCase {
     func testWindowsQuickSnapDefaultsDoNotConflict() {
         let actions: [WindowAction] = [
             .leftHalf, .rightHalf, .maximize, .restore,
-            .topLeft, .topRight, .bottomLeft, .bottomRight
+            .topLeft, .topRight, .bottomLeft, .bottomRight, .snapLayoutPicker
         ]
         let shortcuts = actions.reduce(into: [WindowAction: MASShortcut]()) { result, action in
             if let shortcut = action.spectacleDefault {
@@ -351,6 +351,8 @@ final class WindowsQuickSnapDefaultsTests: XCTestCase {
         XCTAssertEqual(shortcuts.count, actions.count)
         let identities = shortcuts.values.map(ShortcutCycle.ShortcutIdentity.init)
         XCTAssertEqual(Set(identities).count, actions.count)
+        XCTAssertEqual(shortcuts[.snapLayoutPicker].map(ShortcutCycle.ShortcutIdentity.init),
+                       actionShortcutIdentity(.snapLayoutPicker))
     }
 }
 

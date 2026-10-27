@@ -153,7 +153,8 @@ enum WindowAction: Int, Codable {
          thirdVerticalSixth = 143,
          fourthVerticalSixth = 144,
          fifthVerticalSixth = 145,
-         lastVerticalSixth = 146
+         lastVerticalSixth = 146,
+         snapLayoutPicker = 147
 
     // Order matters here - it's used in the menu
     static let active = [leftHalf, rightHalf, centerHalf, topHalf, bottomHalf,
@@ -161,7 +162,7 @@ enum WindowAction: Int, Codable {
                          firstThird, centerThird, lastThird, firstTwoThirds, centerTwoThirds, lastTwoThirds,
                          topVerticalThird, middleVerticalThird, bottomVerticalThird, topVerticalTwoThirds, bottomVerticalTwoThirds,
                          maximize, almostMaximize, maximizeHeight, larger, smaller, largerWidth, smallerWidth, largerHeight, smallerHeight,
-                         center, centerProminently, restore,
+                         center, centerProminently, restore, snapLayoutPicker,
                          nextDisplay, previousDisplay,
                          moveLeft, moveRight, moveUp, moveDown,
                          firstFourth, secondFourth, thirdFourth, lastFourth, firstThreeFourths, centerThreeFourths, lastThreeFourths,
@@ -232,7 +233,7 @@ enum WindowAction: Int, Codable {
              .fifthVerticalEighth, .sixthVerticalEighth, .seventhVerticalEighth, .lastVerticalEighth,
              .firstVerticalSixth, .secondVerticalSixth, .thirdVerticalSixth,
              .fourthVerticalSixth, .fifthVerticalSixth, .lastVerticalSixth,
-             .cycleStackedWindows, .cycleStackedWindowsBackward: return true
+             .cycleStackedWindows, .cycleStackedWindowsBackward, .snapLayoutPicker: return true
         default: return false
         }
     }
@@ -382,6 +383,7 @@ enum WindowAction: Int, Codable {
         case .displaySeven: return "displaySeven"
         case .displayEight: return "displayEight"
         case .displayNine: return "displayNine"
+        case .snapLayoutPicker: return "snapLayoutPicker"
         }
     }
 
@@ -445,6 +447,8 @@ enum WindowAction: Int, Codable {
             String(localized: "Top Right")
         case .restore:
             String(localized: "Restore")
+        case .snapLayoutPicker:
+            String(localized: "Open Snap Layout Picker")
         case .firstThird:
             String(localized: "First Third")
         case .firstTwoThirds:
@@ -666,7 +670,7 @@ enum WindowAction: Int, Codable {
 
     var resizes: Bool {
         switch self {
-        case .center, .centerProminently, .nextDisplay, .previousDisplay,
+        case .center, .centerProminently, .snapLayoutPicker, .nextDisplay, .previousDisplay,
              .displayOne, .displayTwo, .displayThree, .displayFour, .displayFive,
              .displaySix, .displaySeven, .displayEight, .displayNine: return false
         case .moveUp, .moveDown, .moveLeft, .moveRight: return Defaults.resizeOnDirectionalMove.enabled
@@ -685,7 +689,7 @@ enum WindowAction: Int, Codable {
     
     var isDragSnappable: Bool {
         switch self {
-        case .restore, .previousDisplay, .nextDisplay, .moveUp, .moveDown, .moveLeft, .moveRight, .specified, .reverseAll, .tileAll, .tileRows, .tileColumns, .cascadeAll, .larger, .smaller, .largerWidth, .smallerWidth, .cascadeActiveApp, .tileActiveApp,
+        case .restore, .snapLayoutPicker, .previousDisplay, .nextDisplay, .moveUp, .moveDown, .moveLeft, .moveRight, .specified, .reverseAll, .tileAll, .tileRows, .tileColumns, .cascadeAll, .larger, .smaller, .largerWidth, .smallerWidth, .cascadeActiveApp, .tileActiveApp,
             .cycleStackedWindows, .cycleStackedWindowsBackward,
             .firstVerticalEighth, .secondVerticalEighth, .thirdVerticalEighth, .fourthVerticalEighth,
             .fifthVerticalEighth, .sixthVerticalEighth, .seventhVerticalEighth, .lastVerticalEighth,
@@ -722,6 +726,7 @@ enum WindowAction: Int, Codable {
         case .topLeft: return Shortcut( ctrl|alt|shift, kVK_LeftArrow )
         case .topRight: return Shortcut( ctrl|alt|shift, kVK_RightArrow )
         case .restore: return Shortcut( ctrl|alt, kVK_DownArrow)
+        case .snapLayoutPicker: return Shortcut(ctrl|alt, kVK_ANSI_Z)
         default: return nil
         }
     }
