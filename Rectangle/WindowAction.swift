@@ -154,14 +154,15 @@ enum WindowAction: Int, Codable {
          fourthVerticalSixth = 144,
          fifthVerticalSixth = 145,
          lastVerticalSixth = 146,
-         snapLayoutPicker = 147
+         snapLayoutPicker = 147,
+         toggleFullScreen = 148
 
     // Order matters here - it's used in the menu
     static let active = [leftHalf, rightHalf, centerHalf, topHalf, bottomHalf,
                          topLeft, topRight, bottomLeft, bottomRight,
                          firstThird, centerThird, lastThird, firstTwoThirds, centerTwoThirds, lastTwoThirds,
                          topVerticalThird, middleVerticalThird, bottomVerticalThird, topVerticalTwoThirds, bottomVerticalTwoThirds,
-                         maximize, almostMaximize, maximizeHeight, larger, smaller, largerWidth, smallerWidth, largerHeight, smallerHeight,
+                         maximize, toggleFullScreen, almostMaximize, maximizeHeight, larger, smaller, largerWidth, smallerWidth, largerHeight, smallerHeight,
                          center, centerProminently, restore, snapLayoutPicker,
                          nextDisplay, previousDisplay,
                          moveLeft, moveRight, moveUp, moveDown,
@@ -243,6 +244,7 @@ enum WindowAction: Int, Codable {
         case .leftHalf: return "leftHalf"
         case .rightHalf: return "rightHalf"
         case .maximize: return "maximize"
+        case .toggleFullScreen: return "toggleFullScreen"
         case .maximizeHeight: return "maximizeHeight"
         case .previousDisplay: return "previousDisplay"
         case .nextDisplay: return "nextDisplay"
@@ -421,6 +423,8 @@ enum WindowAction: Int, Codable {
             String(localized: "Right")
         case .maximize:
             String(localized: "Maximize")
+        case .toggleFullScreen:
+            String(localized: "Toggle Full Screen")
         case .maximizeHeight:
             String(localized: "Maximize Height")
         case .previousDisplay:
@@ -670,7 +674,7 @@ enum WindowAction: Int, Codable {
 
     var resizes: Bool {
         switch self {
-        case .center, .centerProminently, .snapLayoutPicker, .nextDisplay, .previousDisplay,
+        case .center, .centerProminently, .snapLayoutPicker, .toggleFullScreen, .nextDisplay, .previousDisplay,
              .displayOne, .displayTwo, .displayThree, .displayFour, .displayFive,
              .displaySix, .displaySeven, .displayEight, .displayNine: return false
         case .moveUp, .moveDown, .moveLeft, .moveRight: return Defaults.resizeOnDirectionalMove.enabled
@@ -689,7 +693,7 @@ enum WindowAction: Int, Codable {
     
     var isDragSnappable: Bool {
         switch self {
-        case .restore, .snapLayoutPicker, .previousDisplay, .nextDisplay, .moveUp, .moveDown, .moveLeft, .moveRight, .specified, .reverseAll, .tileAll, .tileRows, .tileColumns, .cascadeAll, .larger, .smaller, .largerWidth, .smallerWidth, .cascadeActiveApp, .tileActiveApp,
+        case .restore, .snapLayoutPicker, .toggleFullScreen, .previousDisplay, .nextDisplay, .moveUp, .moveDown, .moveLeft, .moveRight, .specified, .reverseAll, .tileAll, .tileRows, .tileColumns, .cascadeAll, .larger, .smaller, .largerWidth, .smallerWidth, .cascadeActiveApp, .tileActiveApp,
             .cycleStackedWindows, .cycleStackedWindowsBackward,
             .firstVerticalEighth, .secondVerticalEighth, .thirdVerticalEighth, .fourthVerticalEighth,
             .fifthVerticalEighth, .sixthVerticalEighth, .seventhVerticalEighth, .lastVerticalEighth,
@@ -713,6 +717,7 @@ enum WindowAction: Int, Codable {
         case .leftHalf: return Shortcut( ctrl|alt, kVK_LeftArrow )
         case .rightHalf: return Shortcut( ctrl|alt, kVK_RightArrow )
         case .maximize: return Shortcut( ctrl|alt, kVK_UpArrow )
+        case .toggleFullScreen: return Shortcut( ctrl|alt|shift, kVK_ANSI_F )
         case .maximizeHeight: return Shortcut( ctrl|alt|shift, kVK_ANSI_H )
         case .previousDisplay: return Shortcut( ctrl|alt|cmd, kVK_LeftArrow )
         case .nextDisplay:  return Shortcut( ctrl|alt|cmd, kVK_RightArrow )
@@ -742,6 +747,7 @@ enum WindowAction: Int, Codable {
         case .topLeft: return Shortcut( ctrl|alt, kVK_ANSI_U )
         case .topRight: return Shortcut( ctrl|alt, kVK_ANSI_I )
         case .maximize: return Shortcut( ctrl|alt, kVK_UpArrow )
+        case .toggleFullScreen: return Shortcut( ctrl|alt|shift, kVK_ANSI_F )
         case .maximizeHeight: return Shortcut( ctrl|alt|shift, kVK_UpArrow )
         case .previousDisplay: return Shortcut( ctrl|alt|cmd, kVK_LeftArrow )
         case .nextDisplay: return Shortcut( ctrl|alt|cmd, kVK_RightArrow )
@@ -770,6 +776,8 @@ enum WindowAction: Int, Codable {
         case .leftHalf: return NSImage(imageLiteralResourceName: "leftHalfTemplate")
         case .rightHalf: return NSImage(imageLiteralResourceName: "rightHalfTemplate")
         case .maximize: return NSImage(imageLiteralResourceName: "maximizeTemplate")
+        case .toggleFullScreen:
+            return NSImage(systemSymbolName: "arrow.up.left.and.arrow.down.right", accessibilityDescription: String(localized: "Toggle Full Screen")) ?? NSImage()
         case .maximizeHeight: return NSImage(imageLiteralResourceName: "maximizeHeightTemplate")
         case .previousDisplay: return NSImage(imageLiteralResourceName: "prevDisplayTemplate")
         case .nextDisplay: return NSImage(imageLiteralResourceName: "nextDisplayTemplate")

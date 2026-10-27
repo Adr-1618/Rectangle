@@ -270,6 +270,11 @@ class ShortcutManager {
         defer { if !completionHandledByWindowManager { originalParameters.completion?() } }
         Notification.Name.windowActionWillExecute.post(object: parameters)
 
+        if parameters.action == .toggleFullScreen {
+            performFullScreenToggle(for: parameters)
+            return
+        }
+
         if parameters.action == .snapLayoutPicker {
             guard let windowElement = parameters.windowElement ?? AccessibilityElement.getFrontWindowElement() else {
                 NSSound.beep()
@@ -342,6 +347,23 @@ class ShortcutManager {
 
         completionHandledByWindowManager = true
         windowManager.execute(parameters)
+    }
+
+    private func performFullScreenToggle(for parameters: ExecutionParameters) {
+        guard let windowElement = parameters.windowElement ?? AccessibilityElement.getFrontWindowElement(),
+              let processID = windowElement.pid,
+              NSRunningApplication(processIdentifier: processID) != nil,
+              let keyDown = CGEvent(keyboardEventSource: nil, virtualKey: CGKeyCode(kVK_ANSI_F), keyDown: true),
+              let keyUp = CGEvent(keyboardEventSource: nil, virtualKey: CGKeyCode(kVK_ANSI_F), keyDown: false)
+        else {
+            NSSound.beep()
+            return
+        }
+
+        keyDown.flags = [.maskControl, .maskCommand]
+        keyUp.flags = [.maskControl, .maskCommand]
+        CGEventPostToPid(processID, keyDown)
+        CGEventPostToPid(processID, keyUp)
     }
 
     /// Mouse buttons work on the focused window, like keys, unless they've

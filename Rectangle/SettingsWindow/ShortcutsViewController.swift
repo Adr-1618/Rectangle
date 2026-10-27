@@ -301,7 +301,7 @@ class ShortcutsViewController: NSViewController {
         let standardCategories: [ShortcutCategory] = [
             ShortcutCategory(actions: [.leftHalf, .rightHalf, .centerHalf, .topHalf, .bottomHalf]),
             ShortcutCategory(actions: [.topLeft, .topRight, .bottomLeft, .bottomRight]),
-            ShortcutCategory(actions: [.maximize, .almostMaximize, .maximizeHeight, .larger, .smaller, .center, .restore]),
+            ShortcutCategory(actions: [.maximize, .toggleFullScreen, .almostMaximize, .maximizeHeight, .larger, .smaller, .center, .restore]),
             ShortcutCategory(actions: [.nextDisplay, .previousDisplay])
         ]
         

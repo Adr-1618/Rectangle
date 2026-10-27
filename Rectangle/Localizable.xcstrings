@@ -39366,6 +39366,23 @@
           }
         }
       }
+    },
+    "Toggle Full Screen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toggle Full Screen"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attiva/disattiva tutto schermo"
+          }
+        }
+      }
     }
   },
   "version": "1.3"
