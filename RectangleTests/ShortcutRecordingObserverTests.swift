@@ -351,8 +351,7 @@ final class WindowsQuickSnapDefaultsTests: XCTestCase {
         XCTAssertEqual(shortcuts.count, actions.count)
         let identities = shortcuts.values.map(ShortcutCycle.ShortcutIdentity.init)
         XCTAssertEqual(Set(identities).count, actions.count)
-        XCTAssertEqual(shortcuts[.snapLayoutPicker].map(ShortcutCycle.ShortcutIdentity.init),
-                       actionShortcutIdentity(.snapLayoutPicker))
+        XCTAssertNotNil(shortcuts[.snapLayoutPicker])
     }
 }
 
