@@ -145,6 +145,14 @@ struct BehaviorSettingsView: View {
                 }
             }
 
+            // MARK: - Snap Assist
+            Section("Snap Assist") {
+                Toggle("Suggest a window after snapping to a half", isOn: $viewModel.snapAssist)
+                Text("Choose an app to place it in the other half. Suggested windows stay where they are until you select one.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
             // MARK: - Maximize
             Section {
                 CustomDisclosureGroup {

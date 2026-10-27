@@ -657,3 +657,169 @@ private final class SnapLayoutPickerPanel: NSPanel {
         orderOut(nil)
     }
 }
+
+
+/// Offers other visible application windows after a half snap. It shows app names
+/// and icons only; a suggested window is moved only after the user selects it.
+final class SnapAssistPanel: NSPanel {
+    private struct Candidate {
+        let windowId: CGWindowID
+        let pid: pid_t
+        let appName: String
+        let label: String
+    }
+
+    static let shared = SnapAssistPanel()
+
+    private var candidates: [Candidate] = []
+    private var destinationAction: WindowAction = .rightHalf
+    private weak var targetScreen: NSScreen?
+    private var rowButtons = [NSButton]()
+
+    override var canBecomeKey: Bool { true }
+
+    private init() {
+        super.init(contentRect: NSRect(x: 0, y: 0, width: 300, height: 180),
+                   styleMask: [.borderless, .nonactivatingPanel],
+                   backing: .buffered,
+                   defer: false)
+        isOpaque = false
+        backgroundColor = .clear
+        level = .floating
+        hasShadow = true
+        isReleasedWhenClosed = false
+        collectionBehavior = [.canJoinAllSpaces, .transient, .ignoresCycle]
+    }
+
+    static func offer(for result: ResultParameters) {
+        guard Defaults.snapAssist.enabled,
+              result.source != .snapAssist,
+              let snappedWindowId = result.windowId,
+              result.action == .leftHalf || result.action == .rightHalf
+        else { return }
+
+        let screen = result.calcResult.screen
+        let usableFrame = screen.visibleFrame
+        let ownPid = NSRunningApplication.current.processIdentifier
+        let windowInfos = WindowUtil.getWindowList(forceRefresh: true).filter { info in
+            info.id != snappedWindowId
+                && info.pid != ownPid
+                && info.level == CGWindowLevelForKey(.normalWindow)
+                && info.alpha > 0.01
+                && info.frame.width >= 80
+                && info.frame.height >= 60
+                && info.frame.intersects(usableFrame)
+                && !(NSRunningApplication(processIdentifier: info.pid)?.isHidden ?? true)
+        }
+        guard !windowInfos.isEmpty else { return }
+
+        var occurrences = [String: Int]()
+        for info in windowInfos {
+            let name = info.processName ?? "Application"
+            occurrences[name, default: 0] += 1
+        }
+        var positions = [String: Int]()
+        let candidates = windowInfos.prefix(8).map { info -> Candidate in
+            let name = info.processName ?? "Application"
+            positions[name, default: 0] += 1
+            let label = (occurrences[name] ?? 0) > 1 ? "\(name) — Window \(positions[name]!)" : name
+            return Candidate(windowId: info.id, pid: info.pid, appName: name, label: label)
+        }
+
+        let destination: WindowAction = result.action == .leftHalf ? .rightHalf : .leftHalf
+        DispatchQueue.main.async {
+            shared.present(candidates: Array(candidates), on: screen, destination: destination)
+        }
+    }
+
+    private func present(candidates: [Candidate], on screen: NSScreen, destination: WindowAction) {
+        self.candidates = candidates
+        destinationAction = destination
+        targetScreen = screen
+        rowButtons.removeAll()
+        let width: CGFloat = 300
+        let rowHeight: CGFloat = 34
+        let titleHeight: CGFloat = 62
+        let height = titleHeight + CGFloat(candidates.count) * rowHeight + 12
+        let visible = screen.visibleFrame
+        let origin = CGPoint(x: visible.midX - width / 2,
+                             y: max(visible.minY, visible.maxY - height - 12))
+        let frame = NSRect(origin: origin, size: CGSize(width: width, height: height))
+
+        let container = NSVisualEffectView(frame: NSRect(origin: .zero, size: frame.size))
+        container.material = .hudWindow
+        container.blendingMode = .behindWindow
+        container.state = .active
+        container.wantsLayer = true
+        container.layer?.cornerRadius = 12
+        container.layer?.cornerCurve = .continuous
+        container.layer?.masksToBounds = true
+
+        let title = NSTextField(labelWithString: "Snap Assist")
+        title.font = .boldSystemFont(ofSize: 14)
+        title.frame = NSRect(x: 14, y: height - 27, width: width - 28, height: 18)
+        container.addSubview(title)
+
+        let subtitle = NSTextField(labelWithString: "Choose a window for the other half")
+        subtitle.font = .systemFont(ofSize: 11)
+        subtitle.textColor = .secondaryLabelColor
+        subtitle.frame = NSRect(x: 14, y: height - 47, width: width - 28, height: 15)
+        container.addSubview(subtitle)
+
+        for (index, candidate) in candidates.enumerated() {
+            let button = NSButton(title: candidate.label, target: self, action: #selector(selectCandidate(_:)))
+            button.tag = index
+            button.bezelStyle = .texturedRounded
+            button.alignment = .left
+            button.font = .systemFont(ofSize: 12)
+            button.imagePosition = .imageLeading
+            if let icon = NSRunningApplication(processIdentifier: candidate.pid)?.icon {
+                button.image = icon
+            }
+            button.frame = NSRect(x: 10,
+                                  y: height - titleHeight - CGFloat(index + 1) * rowHeight,
+                                  width: width - 20,
+                                  height: rowHeight)
+            container.addSubview(button)
+            rowButtons.append(button)
+        }
+
+        contentView = container
+        setFrame(frame, display: false)
+        makeKeyAndOrderFront(nil)
+        rowButtons.first?.becomeFirstResponder()
+    }
+
+    override func keyDown(with event: NSEvent) {
+        if event.keyCode == 53 {
+            orderOut(nil)
+        } else {
+            super.keyDown(with: event)
+        }
+    }
+
+    override func resignKey() {
+        super.resignKey()
+        orderOut(nil)
+    }
+
+    @objc private func selectCandidate(_ sender: NSButton) {
+        guard candidates.indices.contains(sender.tag),
+              let screen = targetScreen
+        else { return }
+        let candidate = candidates[sender.tag]
+        orderOut(nil)
+
+        guard let window = AccessibilityElement.getWindowElement(candidate.windowId) else {
+            NSSound.beep()
+            return
+        }
+        window.bringToFront(force: true)
+        let parameters = ExecutionParameters(destinationAction,
+                                             screen: screen,
+                                             windowElement: window,
+                                             windowId: candidate.windowId,
+                                             source: .snapAssist)
+        NotificationCenter.default.post(name: destinationAction.notificationName, object: parameters)
+    }
+}

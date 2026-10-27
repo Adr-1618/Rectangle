@@ -395,6 +395,7 @@ class WindowManager {
         }
         WindowAnimationDiagnostics.event("window-action-achieved", fields: evidence)
         Notification.Name.windowActionCompleted.post()
+        SnapAssistPanel.offer(for: result)
         
         if Logger.logging {
             var logItems = ["\(result.action.name)",
@@ -476,6 +477,6 @@ struct ExecutionParameters {
 }
 
 enum ExecutionSource {
-    case keyboardShortcut, dragToSnap, menuItem, url, titleBar
+    case keyboardShortcut, dragToSnap, menuItem, url, titleBar, snapAssist
 
 }
