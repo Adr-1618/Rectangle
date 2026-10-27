@@ -286,7 +286,7 @@ class ShortcutsViewController: NSViewController {
         
         // Expand non-collapsible groups on load
         for group in rootItems where !group.isCollapsible {
-            outlineView.expandItem(group)
+            outlineView.expandItem(group, expandChildren: true)
         }
         
         subscribeToAllowAnyShortcutToggle()
@@ -298,41 +298,92 @@ class ShortcutsViewController: NSViewController {
     }
     
     private func setupGroups() {
-        let standardCategories: [ShortcutCategory] = [
-            ShortcutCategory(actions: [.leftHalf, .rightHalf, .centerHalf, .topHalf, .bottomHalf]),
-            ShortcutCategory(actions: [.topLeft, .topRight, .bottomLeft, .bottomRight]),
-            ShortcutCategory(actions: [.maximize, .toggleFullScreen, .almostMaximize, .maximizeHeight, .larger, .smaller, .center, .restore]),
-            ShortcutCategory(actions: [.nextDisplay, .previousDisplay])
-        ]
-        
-        let moreCategories: [ShortcutCategory] = [
-            ShortcutCategory(actions: [.firstThird, .centerThird, .lastThird, .firstTwoThirds, .centerTwoThirds, .lastTwoThirds]),
-            ShortcutCategory(actions: [
-                .firstFourth, .secondFourth, .thirdFourth, .lastFourth, .firstThreeFourths, .centerThreeFourths, .lastThreeFourths
-            ]),
-            ShortcutCategory(actions: [
-                .topLeftSixth, .topCenterSixth, .topRightSixth, .bottomLeftSixth, .bottomCenterSixth, .bottomRightSixth
-            ]),
-            ShortcutCategory(actions: [.moveLeft, .moveRight, .moveUp, .moveDown])
-        ]
-        
-        let extraCategories: [ShortcutCategory] = [
-            ShortcutCategory(actions: [.tileRows, .tileColumns]),
-            ShortcutCategory(actions: [.largerWidth, .smallerWidth]),
-            ShortcutCategory(actions: [.topVerticalThird, .middleVerticalThird, .bottomVerticalThird, .topVerticalTwoThirds, .bottomVerticalTwoThirds]),
-            ShortcutCategory(actions: [.firstVerticalSixth, .secondVerticalSixth, .thirdVerticalSixth, .fourthVerticalSixth, .fifthVerticalSixth, .lastVerticalSixth]),
-            ShortcutCategory(actions: [.topLeftEighth, .topCenterLeftEighth, .topCenterRightEighth, .topRightEighth, .bottomLeftEighth, .bottomCenterLeftEighth, .bottomCenterRightEighth, .bottomRightEighth]),
-            ShortcutCategory(actions: [.topLeftNinth, .topLeftTwelfth, .topLeftSixteenth])
-        ]
-        
-        let extraGroup = CategoryGroup(title: String(localized: "Extra"), categories: extraCategories, isCollapsible: true)
-        
-        let standardGroup = CategoryGroup(title: "", categories: standardCategories, isCollapsible: false)
-        let moreGroup = CategoryGroup(title: "⋯", categories: moreCategories, subGroups: [extraGroup], isCollapsible: true)
-        
-        rootItems = [standardGroup, moreGroup]
+        let commonActions = CategoryGroup(
+            title: String(localized: "Common Actions"),
+            categories: [],
+            subGroups: [
+                CategoryGroup(
+                    title: String(localized: "Halves & Corners"),
+                    categories: [
+                        ShortcutCategory(actions: [.leftHalf, .rightHalf, .centerHalf, .topHalf, .bottomHalf]),
+                        ShortcutCategory(actions: [.topLeft, .topRight, .bottomLeft, .bottomRight])
+                    ]
+                ),
+                CategoryGroup(
+                    title: String(localized: "Window Size"),
+                    categories: [
+                        ShortcutCategory(actions: [.maximize, .toggleFullScreen, .almostMaximize, .maximizeHeight, .larger, .smaller, .center, .restore])
+                    ]
+                ),
+                CategoryGroup(
+                    title: String(localized: "Displays"),
+                    categories: [
+                        ShortcutCategory(actions: [.nextDisplay, .previousDisplay])
+                    ]
+                )
+            ],
+            isCollapsible: false
+        )
+
+        let advancedLayouts = CategoryGroup(
+            title: String(localized: "Advanced Layouts"),
+            categories: [],
+            subGroups: [
+                CategoryGroup(
+                    title: String(localized: "Rows & Columns"),
+                    categories: [
+                        ShortcutCategory(actions: [.tileRows, .tileColumns]),
+                        ShortcutCategory(actions: [.largerWidth, .smallerWidth])
+                    ]
+                ),
+                CategoryGroup(
+                    title: String(localized: "Vertical Layouts"),
+                    categories: [
+                        ShortcutCategory(actions: [.topVerticalThird, .middleVerticalThird, .bottomVerticalThird, .topVerticalTwoThirds, .bottomVerticalTwoThirds]),
+                        ShortcutCategory(actions: [.firstVerticalSixth, .secondVerticalSixth, .thirdVerticalSixth, .fourthVerticalSixth, .fifthVerticalSixth, .lastVerticalSixth])
+                    ]
+                ),
+                CategoryGroup(
+                    title: String(localized: "Smaller Areas"),
+                    categories: [
+                        ShortcutCategory(actions: [.topLeftEighth, .topCenterLeftEighth, .topCenterRightEighth, .topRightEighth, .bottomLeftEighth, .bottomCenterLeftEighth, .bottomCenterRightEighth, .bottomRightEighth]),
+                        ShortcutCategory(actions: [.topLeftNinth, .topLeftTwelfth, .topLeftSixteenth])
+                    ]
+                )
+            ]
+        )
+
+        let moreActions = CategoryGroup(
+            title: String(localized: "More Actions"),
+            categories: [],
+            subGroups: [
+                CategoryGroup(
+                    title: String(localized: "Thirds"),
+                    categories: [
+                        ShortcutCategory(actions: [.firstThird, .centerThird, .lastThird, .firstTwoThirds, .centerTwoThirds, .lastTwoThirds])
+                    ]
+                ),
+                CategoryGroup(
+                    title: String(localized: "Quarters & Sixths"),
+                    categories: [
+                        ShortcutCategory(actions: [.firstFourth, .secondFourth, .thirdFourth, .lastFourth, .firstThreeFourths, .centerThreeFourths, .lastThreeFourths]),
+                        ShortcutCategory(actions: [.topLeftSixth, .topCenterSixth, .topRightSixth, .bottomLeftSixth, .bottomCenterSixth, .bottomRightSixth])
+                    ]
+                ),
+                CategoryGroup(
+                    title: String(localized: "Move to Edges"),
+                    categories: [
+                        ShortcutCategory(actions: [.moveLeft, .moveRight, .moveUp, .moveDown])
+                    ]
+                ),
+                advancedLayouts
+            ],
+            isCollapsible: true
+        )
+
+        rootItems = [commonActions, moreActions]
     }
-    
+
     deinit {
         if let observer = allowAnyShortcutObserver {
             NotificationCenter.default.removeObserver(observer)
@@ -418,7 +469,10 @@ extension ShortcutsViewController: NSOutlineViewDelegate {
             return 14
         }
         if let group = item as? CategoryGroup, !group.isCollapsible {
-            return 10
+            return 30
+        }
+        if item is CategoryGroup {
+            return 28
         }
         return 28
     }
