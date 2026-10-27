@@ -10,7 +10,7 @@ struct AccessibilityView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            Text("Authorize Rectangle")
+            Text(String(localized: "Authorize Rectangle").replacingOccurrences(of: "Rectangle", with: appDisplayName))
                 .font(.system(size: 20, weight: .semibold))
             
             if let appIcon = NSApp.applicationIconImage {
@@ -21,7 +21,7 @@ struct AccessibilityView: View {
                     .cornerRadius(12)
             }
             
-            Text("Rectangle needs your permission to control your window positions.")
+            Text(String(localized: "Rectangle needs your permission to control your window positions.").replacingOccurrences(of: "Rectangle", with: appDisplayName))
                 .font(.system(size: 13, weight: .regular))
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -44,13 +44,17 @@ struct AccessibilityView: View {
             .controlSize(.large)
             .padding(.horizontal, 20)
             
-            Text("Enable Rectangle.app")
+            Text(String(localized: "Enable Rectangle.app").replacingOccurrences(of: "Rectangle", with: appDisplayName))
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.secondary)
                 .padding(.bottom, 8)
         }
         .padding(24)
         .frame(width: 320)
+    }
+    
+    private var appDisplayName: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "SnapGrid"
     }
     
     private var systemSettingsPath: String {
