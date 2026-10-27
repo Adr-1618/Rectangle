@@ -742,7 +742,7 @@ private struct CustomGestureCard: View {
                 TextField("Seconds", text: $gesture.actions[index].value)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
-                Text("seconds")
+                Text("Seconds")
                     .foregroundColor(.secondary)
             }
         }
@@ -1106,7 +1106,7 @@ private struct CustomGestureCard: View {
                 TextField("Seconds", text: $gesture.actions[index].value)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
-                Text("seconds")
+                Text("Seconds")
                     .foregroundColor(.secondary)
             }
         }

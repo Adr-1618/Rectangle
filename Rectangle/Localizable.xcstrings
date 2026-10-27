@@ -40253,23 +40253,6 @@
         }
       }
     },
-    "seconds": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "seconds"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "secondi"
-          }
-        }
-      }
-    },
     "Input Monitoring permission is needed.": {
       "extractionState": "manual",
       "localizations": {
