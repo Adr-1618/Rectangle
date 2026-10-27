@@ -3,6 +3,7 @@
 import Cocoa
 import CoreGraphics
 import MASShortcut
+import Carbon
 
 protocol ShortcutBindingStore {
     func configure()
@@ -171,7 +172,44 @@ class ShortcutManager {
         workspaceNotificationCenter.removeObserver(self)
     }
 
+    /// Preserve the user's other shortcut choices while moving the alternate
+    /// default for Maximize onto the same key as the green-button action.
+    private func migrateAlternateDefaultMaximizeShortcutIfNeeded() {
+        guard Defaults.alternateDefaultShortcuts.enabled,
+              let topHalf = ShortcutCycle.shortcut(forDefaultsKey: WindowAction.topHalf.name),
+              let maximize = ShortcutCycle.shortcut(forDefaultsKey: WindowAction.maximize.name)
+        else { return }
+
+        let controlOption = NSEvent.ModifierFlags.control.union(.option)
+        let currentTopHalfModifiers = topHalf.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        let currentMaximizeModifiers = maximize.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        guard topHalf.keyCode == Int(kVK_UpArrow),
+              currentTopHalfModifiers == controlOption,
+              maximize.keyCode == Int(kVK_Return),
+              currentMaximizeModifiers == controlOption,
+              let transformer = ValueTransformer(
+                forName: NSValueTransformerName(rawValue: MASDictionaryTransformerName)
+              )
+        else { return }
+
+        let maximizeShortcut = MASShortcut(keyCode: Int(kVK_UpArrow), modifierFlags: controlOption)
+        let topHalfShortcut = MASShortcut(
+            keyCode: Int(kVK_ANSI_U),
+            modifierFlags: controlOption.union(.shift)
+        )
+        UserDefaults.standard.set(
+            transformer.reverseTransformedValue(maximizeShortcut),
+            forKey: WindowAction.maximize.name
+        )
+        UserDefaults.standard.set(
+            transformer.reverseTransformedValue(topHalfShortcut),
+            forKey: WindowAction.topHalf.name
+        )
+    }
+
     private func registerDefaults() {
+
+        migrateAlternateDefaultMaximizeShortcutIfNeeded()
 
         let defaultShortcuts = WindowAction.active.reduce(into: [String: MASShortcut]()) { dict, windowAction in
             guard let defaultShortcut = Defaults.alternateDefaultShortcuts.enabled
