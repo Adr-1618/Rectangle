@@ -699,7 +699,7 @@ final class SnapAssistPanel: NSPanel {
         else { return }
 
         let screen = result.calcResult.screen
-        let usableFrame = screen.visibleFrame
+        let usableFrame = screen.visibleFrame.screenFlipped
         let ownPid = NSRunningApplication.current.processIdentifier
         let windowInfos = WindowUtil.getWindowList(forceRefresh: true).filter { info in
             info.id != snappedWindowId
