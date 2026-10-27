@@ -232,6 +232,28 @@ class ShortcutManager {
         defer { if !completionHandledByWindowManager { originalParameters.completion?() } }
         Notification.Name.windowActionWillExecute.post(object: parameters)
 
+        if parameters.action == .restore,
+           let windowElement = parameters.windowElement ?? AccessibilityElement.getFrontWindowElement(),
+           let windowId = parameters.windowId ?? windowElement.getWindowId(),
+           let restoreRect = AppDelegate.windowHistory.restoreRects[windowId],
+           AppDelegate.windowHistory.consumeRestoreMinimize(
+                windowID: windowId,
+                currentFrame: windowManager.logicalFrame(for: windowElement),
+                restoredFrame: restoreRect
+           ) {
+            guard windowElement.minimize() else {
+                AppDelegate.windowHistory.armRestoreMinimize(windowID: windowId)
+                NSSound.beep()
+                return
+            }
+            AppDelegate.windowHistory.restoreRects.removeValue(forKey: windowId)
+            AppDelegate.windowHistory.preMaximizeRects.removeValue(forKey: windowId)
+            AppDelegate.windowHistory.lastRectangleActions.removeValue(forKey: windowId)
+            return
+        }
+
+
+
         if MultiWindowManager.execute(parameters: parameters) {
             return
         }

@@ -411,6 +411,11 @@ class AccessibilityElement {
         AXUIElementPerformAction(wrappedElement, kAXRaiseAction as CFString)
     }
 
+    /// Minimizes this window using the action exposed by its owning app.
+    func minimize() -> Bool {
+        AXUIElementPerformAction(wrappedElement, kAXMinimizeAction as CFString) == .success
+    }
+
     func bringToFront(force: Bool = false) {
         if isMainWindow != true {
             isMainWindow = true

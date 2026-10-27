@@ -42,7 +42,7 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
-	<string>https://rectangleapp.com/downloads/updates.xml</string>
+	<string>https://github.com/Adr-1618/Rectangle/releases/latest/download/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>lpt9M3PhocbZ3MZiLH+crEqRfU11kfoNzGxSqiEIdvM=</string>
 	<key>SUScheduledCheckInterval</key>

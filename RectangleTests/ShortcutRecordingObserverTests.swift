@@ -1,6 +1,7 @@
 /// ShortcutRecordingObserverTests.swift
 
 import MASShortcut
+import CoreGraphics
 import XCTest
 @testable import Rectangle
 
@@ -331,5 +332,44 @@ class ShortcutRecordingObserverTests: XCTestCase {
             XCTAssertFalse(monitor.isShortcutRegistered(toggleShortcut))
             XCTAssertFalse(monitor.isShortcutRegistered(reflowShortcut))
         }
+    }
+}
+
+
+final class WindowsQuickSnapDefaultsTests: XCTestCase {
+    func testWindowsQuickSnapDefaultsDoNotConflict() {
+        let actions: [WindowAction] = [
+            .leftHalf, .rightHalf, .maximize, .restore,
+            .topLeft, .topRight, .bottomLeft, .bottomRight
+        ]
+        let shortcuts = actions.reduce(into: [WindowAction: MASShortcut]()) { result, action in
+            if let shortcut = action.spectacleDefault {
+                result[action] = shortcut.toMASSHortcut()
+            }
+        }
+
+        XCTAssertEqual(shortcuts.count, actions.count)
+        let identities = shortcuts.values.map(ShortcutCycle.ShortcutIdentity.init)
+        XCTAssertEqual(Set(identities).count, actions.count)
+    }
+}
+
+final class RestoreMinimizeHistoryTests: XCTestCase {
+    func testSecondPressOnlyConsumesForTheSameRestoredFrame() {
+        let history = WindowHistory()
+        let windowID: CGWindowID = 123
+        let restoredFrame = CGRect(x: 40, y: 60, width: 800, height: 600)
+        let movedFrame = CGRect(x: 80, y: 90, width: 800, height: 600)
+
+        history.armRestoreMinimize(windowID: windowID)
+        XCTAssertFalse(history.consumeRestoreMinimize(
+            windowID: windowID, currentFrame: movedFrame, restoredFrame: restoredFrame
+        ))
+        XCTAssertTrue(history.consumeRestoreMinimize(
+            windowID: windowID, currentFrame: restoredFrame, restoredFrame: restoredFrame
+        ))
+        XCTAssertFalse(history.consumeRestoreMinimize(
+            windowID: windowID, currentFrame: restoredFrame, restoredFrame: restoredFrame
+        ))
     }
 }

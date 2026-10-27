@@ -706,22 +706,22 @@ enum WindowAction: Int, Codable {
 
     var spectacleDefault: Shortcut? {
         switch self {
-        case .leftHalf: return Shortcut( cmd|alt, kVK_LeftArrow )
-        case .rightHalf: return Shortcut( cmd|alt, kVK_RightArrow )
-        case .maximize: return Shortcut( cmd|alt, kVK_ANSI_F )
-        case .maximizeHeight: return Shortcut( ctrl|alt|shift, kVK_UpArrow )
+        case .leftHalf: return Shortcut( ctrl|alt, kVK_LeftArrow )
+        case .rightHalf: return Shortcut( ctrl|alt, kVK_RightArrow )
+        case .maximize: return Shortcut( ctrl|alt, kVK_UpArrow )
+        case .maximizeHeight: return Shortcut( ctrl|alt|shift, kVK_ANSI_H )
         case .previousDisplay: return Shortcut( ctrl|alt|cmd, kVK_LeftArrow )
         case .nextDisplay:  return Shortcut( ctrl|alt|cmd, kVK_RightArrow )
-        case .larger: return Shortcut( ctrl|alt|shift, kVK_RightArrow )
-        case .smaller: return Shortcut( ctrl|alt|shift, kVK_LeftArrow )
+        case .larger: return Shortcut( ctrl|alt, kVK_ANSI_Equal )
+        case .smaller: return Shortcut( ctrl|alt, kVK_ANSI_Minus )
         case .bottomHalf: return Shortcut( cmd|alt, kVK_DownArrow )
         case .topHalf: return Shortcut( cmd|alt, kVK_UpArrow )
         case .center: return Shortcut( alt|cmd, kVK_ANSI_C )
-        case .bottomLeft: return Shortcut( cmd|ctrl|shift, kVK_LeftArrow )
-        case .bottomRight: return Shortcut( cmd|ctrl|shift, kVK_RightArrow )
-        case .topLeft: return Shortcut( ctrl|cmd, kVK_LeftArrow )
-        case .topRight: return Shortcut( ctrl|cmd, kVK_RightArrow )
-        case .restore: return Shortcut( ctrl|alt, kVK_Delete)
+        case .bottomLeft: return Shortcut( ctrl|alt|shift, kVK_DownArrow )
+        case .bottomRight: return Shortcut( ctrl|alt|shift, kVK_UpArrow )
+        case .topLeft: return Shortcut( ctrl|alt|shift, kVK_LeftArrow )
+        case .topRight: return Shortcut( ctrl|alt|shift, kVK_RightArrow )
+        case .restore: return Shortcut( ctrl|alt, kVK_DownArrow)
         default: return nil
         }
     }

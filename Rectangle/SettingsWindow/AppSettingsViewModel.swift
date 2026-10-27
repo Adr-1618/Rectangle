@@ -76,12 +76,12 @@ final class AppSettingsViewModel {
     }
 
     func restoreDefaults() {
-        let currentDefaults = Defaults.alternateDefaultShortcuts.enabled ? "Rectangle" : "Spectacle"
+        let currentDefaults = Defaults.alternateDefaultShortcuts.enabled ? "Rectangle" : "Windows"
         let defaultShortcutsTitle = String(localized: "Default Shortcuts")
         let currentlyUsingText = String(localized: "Currently using: ")
         let cancelText = String(localized: "Cancel")
 
-        let response = AlertUtil.threeButtonAlert(question: defaultShortcutsTitle, text: currentlyUsingText + currentDefaults, buttonOneText: "Rectangle", buttonTwoText: "Spectacle", buttonThreeText: cancelText)
+        let response = AlertUtil.threeButtonAlert(question: defaultShortcutsTitle, text: currentlyUsingText + currentDefaults, buttonOneText: "Rectangle", buttonTwoText: "Windows", buttonThreeText: cancelText)
         if response == .alertThirdButtonReturn { return }
 
         let rectangleDefaults = (response == .alertFirstButtonReturn)

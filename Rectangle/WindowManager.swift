@@ -71,6 +71,10 @@ class WindowManager {
         let windowId = parameters.windowId ?? frontmostWindowElement.getWindowId()
 
         let action = parameters.action
+
+        if action != .restore, let windowId {
+            AppDelegate.windowHistory.resetRestoreMinimize(windowID: windowId)
+        }
         
         if action == .restore {
             guard let windowId else {
@@ -78,6 +82,7 @@ class WindowManager {
                 return
             }
             if let restoreRect = AppDelegate.windowHistory.restoreRects[windowId] {
+                AppDelegate.windowHistory.armRestoreMinimize(windowID: windowId)
                 executionID &+= 1
                 let currentExecutionID = executionID
                 completionDeferred = true
