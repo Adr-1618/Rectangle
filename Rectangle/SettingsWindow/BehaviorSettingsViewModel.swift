@@ -66,7 +66,7 @@ final class BehaviorSettingsViewModel {
     
     var greenButtonOverride: Bool {
         didSet {
-            Defaults.greenButtonOverride.enabled = greenButtonOverride
+            Defaults.greenButtonOverrideIsEnabled = greenButtonOverride
             Notification.Name.greenButtonOverride.post()
         }
     }
@@ -236,16 +236,19 @@ final class BehaviorSettingsViewModel {
         
         self.doubleClickTitleBar = WindowAction(rawValue: Defaults.doubleClickTitleBar.value - 1) != nil
         self.autoMaximize = !Defaults.autoMaximize.userDisabled
-        self.greenButtonOverride = Defaults.greenButtonOverride.enabled
+        self.greenButtonOverride = Defaults.greenButtonOverrideIsEnabled
         self.experimentalAnimations = Defaults.experimentalWindowAnimations.enabled
         self.combinedDisplayMode = Defaults.combinedDisplayMode.userEnabled
         self.repeatedMaximizeRestoresPrevious = Defaults.repeatedMaximizeRestoresPrevious.enabled
         self.restoreThenMinimize = Defaults.restoreThenMinimize.enabled ?? true
         self.snapAssist = Defaults.snapAssist.enabled ?? true
-        self.snapPickerActionOrder = Defaults.snapPickerActionOrder.typedValue ?? [0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23]
+        let savedSnapPickerOrder = Defaults.snapPickerActionOrder.typedValue ?? [2, 0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23]
+        let normalizedSnapPickerOrder = savedSnapPickerOrder.contains(WindowAction.maximize.rawValue)
+            ? savedSnapPickerOrder
+            : [WindowAction.maximize.rawValue] + savedSnapPickerOrder
+        self.snapPickerActionOrder = normalizedSnapPickerOrder
         self.snapPickerHiddenActions = Defaults.snapPickerHiddenActions.typedValue ?? []
-        self.snapPickerActionOrder = Defaults.snapPickerActionOrder.typedValue ?? [0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23]
-        self.snapPickerHiddenActions = Defaults.snapPickerHiddenActions.typedValue ?? []
+        Defaults.snapPickerActionOrder.typedValue = normalizedSnapPickerOrder
         self.restoreThenMinimize = Defaults.restoreThenMinimize.enabled ?? true
         
         self.todoEnabled = Defaults.todo.userEnabled
@@ -305,10 +308,15 @@ final class BehaviorSettingsViewModel {
         
         self.doubleClickTitleBar = WindowAction(rawValue: Defaults.doubleClickTitleBar.value - 1) != nil
         self.autoMaximize = !Defaults.autoMaximize.userDisabled
-        self.greenButtonOverride = Defaults.greenButtonOverride.enabled
+        self.greenButtonOverride = Defaults.greenButtonOverrideIsEnabled
         self.experimentalAnimations = Defaults.experimentalWindowAnimations.enabled
         self.combinedDisplayMode = Defaults.combinedDisplayMode.userEnabled
         self.repeatedMaximizeRestoresPrevious = Defaults.repeatedMaximizeRestoresPrevious.enabled
+        let savedSnapPickerOrder = Defaults.snapPickerActionOrder.typedValue ?? [2, 0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23]
+        self.snapPickerActionOrder = savedSnapPickerOrder.contains(WindowAction.maximize.rawValue)
+            ? savedSnapPickerOrder
+            : [WindowAction.maximize.rawValue] + savedSnapPickerOrder
+        self.snapPickerHiddenActions = Defaults.snapPickerHiddenActions.typedValue ?? []
         
         self.todoEnabled = Defaults.todo.userEnabled
         self.todoSidebarWidth = Defaults.todoSidebarWidth.value

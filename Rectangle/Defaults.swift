@@ -33,7 +33,7 @@ class Defaults {
     static let halvesPreserveOtherAxisSize = BoolDefault(key: "halvesPreserveOtherAxisSize")
     static let repeatedMaximizeRestoresPrevious = BoolDefault(key: "repeatedMaximizeRestoresPrevious")
     static let restoreThenMinimize = OptionalBoolDefault(key: "restoreThenMinimize")
-    static let snapPickerActionOrder = JSONDefault<[Int]>(key: "snapPickerActionOrder", defaultValue: [0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23])
+    static let snapPickerActionOrder = JSONDefault<[Int]>(key: "snapPickerActionOrder", defaultValue: [2, 0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23])
     static let snapPickerHiddenActions = JSONDefault<Set<Int>>(key: "snapPickerHiddenActions", defaultValue: [])
     static let snapAssist = OptionalBoolDefault(key: "snapAssist")
     static let moveFixedSizeToEdge = IntEnumDefault<EdgeAlignment>(key: "moveFixedSizeToEdge", defaultValue: .edgesAndCorners)
@@ -137,6 +137,9 @@ class Defaults {
     static let screensOrderedByX = IntEnumDefault<ScreenOrdering>(key: "screensOrderedByX", defaultValue: .yThenMinX)
     static let combinedDisplayMode = OptionalBoolDefault(key: "combinedDisplayMode")
     static let greenButtonOverride = BoolDefault(key: "greenButtonOverride")
+    static var greenButtonOverrideIsEnabled: Bool {
+        UserDefaults.standard.object(forKey: greenButtonOverride.key) == nil || greenButtonOverride.enabled
+    }
     static let mouseButtonShortcutsUseWindowUnderCursor = BoolDefault(key: "mouseButtonShortcutsUseWindowUnderCursor")
     static let wasWelcomeDisplayed = BoolDefault(key: "wasWelcomeDisplayed")
     static var array: [Default] = [

@@ -9,11 +9,11 @@ env:
   XCODE_SCHEME: "Rectangle"
   CODE_SIGN_IDENTITY: "-"
   BUILD_DIR: "build"
-  XCODE_ARCHIVE: "Rectangle.xcarchive"
-  APP_NAME: "Rectangle.app"
+  XCODE_ARCHIVE: "SnapGrid.xcarchive"
+  APP_NAME: "SnapGrid.app"
   EXPORT_OPTIONS_PLIST: "exportOptions.plist"
-  DMG_NAME: "Rectangle"
-  DMG_FILE_NAME: "Rectangle.dmg"
+  DMG_NAME: "SnapGrid"
+  DMG_FILE_NAME: "SnapGrid.dmg"
 
 jobs:
   build:

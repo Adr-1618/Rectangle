@@ -1,65 +1,65 @@
 {
-  "color-space-for-untagged-svg-colors" : "display-p3",
-  "features" : [
+  "color-space-for-untagged-svg-colors": "display-p3",
+  "features": [
     "specular-location"
   ],
-  "fill" : {
-    "linear-gradient" : [
-      "display-p3:0.36863,0.43529,0.50980,1.00000",
-      "srgb:0.24706,0.27451,0.33333,1.00000"
+  "fill": {
+    "linear-gradient": [
+      "srgb:0.07500,0.09000,0.22000,1.00000",
+      "srgb:0.22000,0.12000,0.40000,1.00000"
     ]
   },
-  "groups" : [
+  "groups": [
     {
-      "blur-material" : null,
-      "layers" : [
+      "blur-material": null,
+      "layers": [
         {
-          "glass" : true,
-          "image-name" : "Dots.svg",
-          "name" : "Dots"
+          "glass": true,
+          "image-name": "Dots.svg",
+          "name": "Dots"
         }
       ],
-      "shadow" : {
-        "kind" : "none",
-        "opacity" : 0.5
+      "shadow": {
+        "kind": "none",
+        "opacity": 0.5
       },
-      "specular" : "inside",
-      "translucency" : {
-        "enabled" : true,
-        "value" : 0.2
+      "specular": "inside",
+      "translucency": {
+        "enabled": true,
+        "value": 0.2
       }
     },
     {
-      "layers" : [
+      "layers": [
         {
-          "fill-specializations" : [
+          "fill-specializations": [
             {
-              "appearance" : "tinted",
-              "value" : {
-                "linear-gradient" : [
+              "appearance": "tinted",
+              "value": {
+                "linear-gradient": [
                   "gray:0.90000,1.00000",
                   "extended-gray:0.75000,1.00000"
                 ]
               }
             }
           ],
-          "glass" : true,
-          "image-name" : "Overlay.svg",
-          "name" : "Overlay"
+          "glass": true,
+          "image-name": "Overlay.svg",
+          "name": "Overlay"
         }
       ],
-      "shadow" : {
-        "kind" : "layer-color",
-        "opacity" : 0.5
+      "shadow": {
+        "kind": "layer-color",
+        "opacity": 0.5
       },
-      "translucency" : {
-        "enabled" : true,
-        "value" : 0.5
+      "translucency": {
+        "enabled": true,
+        "value": 0.5
       }
     }
   ],
-  "supported-platforms" : {
-    "squares" : [
+  "supported-platforms": {
+    "squares": [
       "macOS"
     ]
   }

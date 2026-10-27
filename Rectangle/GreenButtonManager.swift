@@ -19,7 +19,7 @@ class GreenButtonManager {
     }
 
     private func toggleListening() {
-        if Defaults.greenButtonOverride.enabled {
+        if Defaults.greenButtonOverrideIsEnabled {
             if !eventMonitor.running {
                 eventMonitor.start()
             }
