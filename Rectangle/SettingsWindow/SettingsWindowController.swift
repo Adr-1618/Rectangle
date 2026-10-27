@@ -44,6 +44,7 @@ class SettingsTabViewController: NSTabViewController {
     
     enum Tab: Int, CaseIterable {
         case shortcuts
+        case gestures
         case snapAreas
         case behavior
         case appSettings
@@ -51,6 +52,7 @@ class SettingsTabViewController: NSTabViewController {
         var label: String {
             switch self {
             case .shortcuts:   return String(localized:"Shortcuts")
+            case .gestures:    return String(localized:"Gestures")
             case .snapAreas:   return String(localized:"Snap Areas")
             case .behavior:    return String(localized:"Behavior")
             case .appSettings: return String(localized:"App Settings")
@@ -60,6 +62,7 @@ class SettingsTabViewController: NSTabViewController {
         var imageName: String {
             switch self {
             case .shortcuts:   return "keyboardToolbarTemplate"
+            case .gestures:    return "hand.draw"
             case .snapAreas:   return "snapAreaTemplate"
             case .behavior:    return "toolbarSettingsTemplate"
             case .appSettings: return "appSettingsTemplate"
@@ -69,6 +72,7 @@ class SettingsTabViewController: NSTabViewController {
         var defaultSize: NSSize? {
             switch self {
             case .shortcuts:   return NSSize(width: 500, height: 540)
+            case .gestures:    return NSSize(width: 860, height: 720)
             default: return nil
             }
         }
@@ -77,6 +81,11 @@ class SettingsTabViewController: NSTabViewController {
             switch self {
             case .shortcuts:
                 return ShortcutsViewController()
+            case .gestures:
+                if #available(macOS 11.0, *) {
+                    return TrackpadGesturesViewController()
+                }
+                return NSViewController()
             case .snapAreas:
                 return SnapAreaSettingsViewController()
             case .behavior:
@@ -99,7 +108,11 @@ class SettingsTabViewController: NSTabViewController {
         for tab in Tab.allCases {
             let item = NSTabViewItem(viewController: tab.makeViewController())
             item.label = tab.label
-            item.image = NSImage(imageLiteralResourceName: tab.imageName)
+            if tab == .gestures, #available(macOS 11.0, *) {
+                item.image = NSImage(systemSymbolName: tab.imageName, accessibilityDescription: tab.label)
+            } else {
+                item.image = NSImage(imageLiteralResourceName: tab.imageName)
+            }
             addTabViewItem(item)
         }
         selectedTabViewItemIndex = SettingsTabViewController.currentTab.rawValue

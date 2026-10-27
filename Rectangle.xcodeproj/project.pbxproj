@@ -118,6 +118,7 @@
 		988D068322EB4EF3004EABD7 /* MoveUpDownCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988D068222EB4EF3004EABD7 /* MoveUpDownCalculation.swift */; };
 		98985839305C1B6400459AFF /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98985838305C1B6400459AFF /* SettingsWindowController.swift */; };
 		9898583B305C1B6400459AFF /* ShortcutsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9898583A305C1B6400459AFF /* ShortcutsViewController.swift */; };
+		A11CE0FF0000000000000002 /* TrackpadGestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11CE0FF0000000000000001 /* TrackpadGestures.swift */; };
 		98985B9B3066B0A400459AFF /* CustomDisclosureGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98985B9A3066B0A400459AFF /* CustomDisclosureGroup.swift */; };
 		98987AA42391890400BE72C4 /* LogViewer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98987AA22391890300BE72C4 /* LogViewer.storyboard */; };
 		98987AA52391890400BE72C4 /* LogViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98987AA32391890400BE72C4 /* LogViewer.swift */; };
@@ -364,6 +365,7 @@
 		988D068222EB4EF3004EABD7 /* MoveUpDownCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveUpDownCalculation.swift; sourceTree = "<group>"; };
 		98985838305C1B6400459AFF /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
 		9898583A305C1B6400459AFF /* ShortcutsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsViewController.swift; sourceTree = "<group>"; };
+		A11CE0FF0000000000000001 /* TrackpadGestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackpadGestures.swift; sourceTree = "<group>"; };
 		98985B9A3066B0A400459AFF /* CustomDisclosureGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDisclosureGroup.swift; sourceTree = "<group>"; };
 		98987AA22391890300BE72C4 /* LogViewer.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogViewer.storyboard; sourceTree = "<group>"; };
 		98987AA32391890400BE72C4 /* LogViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewer.swift; sourceTree = "<group>"; };
@@ -838,6 +840,7 @@
 			children = (
 				98985838305C1B6400459AFF /* SettingsWindowController.swift */,
 				9898583A305C1B6400459AFF /* ShortcutsViewController.swift */,
+				A11CE0FF0000000000000001 /* TrackpadGestures.swift */,
 				98ED70523062D3810077BD10 /* ExtraSettings.swift */,
 				98ED7039305DB1180077BD10 /* BehaviorSettingsView.swift */,
 				98ED703B305DB20A0077BD10 /* BehaviorSettingsViewModel.swift */,
@@ -1190,6 +1193,7 @@
 				D04CE30227817A6100BD47B3 /* TopCenterNinthCalculation.swift in Sources */,
 				98985839305C1B6400459AFF /* SettingsWindowController.swift in Sources */,
 				9898583B305C1B6400459AFF /* ShortcutsViewController.swift in Sources */,
+				A11CE0FF0000000000000002 /* TrackpadGestures.swift in Sources */,
 				98A009B52512537800CFBF0C /* TopLeftSixthCalculation.swift in Sources */,
 				9824704F22B189250037B409 /* BestEffortWindowMover.swift in Sources */,
 				30166BD024F27D6A00A38608 /* SpecifiedCalculation.swift in Sources */,

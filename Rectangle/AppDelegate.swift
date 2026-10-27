@@ -149,6 +149,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.stackBadgeManager = StackBadgeManager()
         self.titleBarManager = TitleBarManager()
         self.greenButtonManager = GreenButtonManager()
+        _ = TrackpadGestureManager.shared.refresh()
         self.initializeTodo()
         checkForProblematicApps()
         MacTilingDefaults.checkForBuiltInTiling(skipIfAlreadyNotified: true)
