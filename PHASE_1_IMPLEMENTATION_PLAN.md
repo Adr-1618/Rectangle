@@ -1,6 +1,6 @@
 # Phase 1 Implementation Plan — Windows-Style Quick Snapping
 
-**Status:** Implementation plan; no Swift source changes are included.  
+**Status:** Phases 1 and an initial Snap Assist slice are implemented on the feature branch; on-device interaction checks remain.  
 **Branch:** `design/windows-snap-spec-v0.1`  
 **Related documents:** [Product specification](PRODUCT_SPEC_DRAFT.md), [Settings and interaction draft](SETTINGS_UX_DRAFT.md)
 
@@ -85,6 +85,15 @@ Start only after Phase 1 meets its acceptance criteria:
 - Show Snap Assist automatically after a snap by default, but never move another window until the user selects it.
 - Keep app names/icons visible by default; leave window titles and previews off unless explicitly enabled.
 - Add focused interaction and geometry checks, then run the GitHub Actions build for the same branch.
+
+## Implementation progress
+
+- Phase 1 quick actions and the configurable visual zone picker are implemented on this branch.
+- The first Snap Assist slice now suggests up to eight visible windows from other apps after a left/right half snap. It places a selected window in the opposite half and does not move suggestions before selection.
+- Snap Assist is enabled by default and can be disabled in Behavior settings. Window titles are not read by this feature.
+- GitHub Actions run [40515648038](https://github.com/Adr-1618/Rectangle/actions/runs/40515648038) built and tested the feature commit and produced the `Build` artifact.
+- Manual checks remain: Accessibility permission, both snap directions, selecting and dismissing suggestions, disabling Snap Assist, and behavior across displays.
+- Snap Assist currently supports half snaps only. Other zones, same-app window suggestions, and richer per-layout behavior remain future work.
 
 ## Phase 1 acceptance criteria
 

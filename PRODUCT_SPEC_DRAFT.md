@@ -1,6 +1,6 @@
 # Windows-Style Snap Mode — Product Specification (Draft v0.1)
 
-**Status:** Design draft for review. No implementation changes are included in this document.  
+**Status:** Draft v0.1. Phase 1 and a first Snap Assist slice are implemented on `design/windows-snap-spec-v0.1`; broader Phase 2 work remains.  
 **Base:** Public fork of [Rectangle](https://github.com/rxhanson/Rectangle).  
 **Audience:** macOS users who want keyboard-driven window snapping with Windows-like behavior.
 
@@ -72,6 +72,8 @@ The final key bindings remain open for review. The Down behavior is decided: the
 - This is the default Windows-style behavior. Settings can disable Snap Assist or change it to appear only when requested.
 - It must not move or resize another window until the user selects that window and a target region.
 - Respect minimum window sizes and report when an app cannot fit a selected region.
+
+**Current prototype scope:** Snap Assist appears after a left- or right-half snap and offers up to eight visible windows from other apps. It shows app names and icons without reading window titles. Choosing one places it in the complementary half; dismissing or doing nothing leaves it unchanged. A Behavior setting turns it on or off. Support for other zones remains future work.
 
 ## Settings and customization
 
