@@ -20,6 +20,19 @@ The app should remain a lightweight menu-bar utility. It must not read window co
 - Do not move a second window automatically without the user's selection.
 - Keep the existing Rectangle installation separate: development builds must use a distinct app identity before running.
 
+## Product advantage
+
+The goal is to be the stronger choice for people who want Windows-like window management on macOS, not to duplicate Rectangle's full feature list. Make that advantage measurable:
+
+- **Familiar by default:** left/right halves, maximize, restore, and the agreed restore-then-minimize sequence use a consistent Windows-like key map.
+- **Adaptable without editing code:** every shortcut can be changed or disabled, and layout presets can be enabled, reordered, resized where supported, and reset.
+- **Visual when useful:** a keyboard-first layout picker and Snap Assist make available zones and next steps clear. Suggestions never reposition a second window without selection.
+- **Predictable across displays:** actions target the display containing the focused window; changing displays is a separate explicit action.
+- **Private by design:** no telemetry or cloud sync, no clipboard or window-content reading, and sensitive titles/previews remain hidden unless explicitly enabled.
+- **Native and understandable:** use macOS accessibility and window APIs, explain permission failures, respect Reduce Motion, and keep settings discoverable without requiring menu-bar space.
+
+These are product goals, not claims that the current fork already provides them. Each must be demonstrated by implementation and verification before describing the app as better.
+
 ## Phase 1 — Quick snapping
 
 ### Proposed default actions
