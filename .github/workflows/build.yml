@@ -1,4 +1,4 @@
-name: Build
+name: SnapGrid Build
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -21,6 +21,20 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Generate app icon sizes
+      run: |
+        source="Rectangle/Branding/SnapGrid-App-Icon.png"
+        target="Rectangle/Assets.xcassets/AppIcon.appiconset"
+        sips -z 16 16 "$source" --out "$target/mac016pts1x.png" >/dev/null
+        sips -z 32 32 "$source" --out "$target/mac016pts2x.png" >/dev/null
+        cp "$target/mac016pts2x.png" "$target/mac032pts1x.png"
+        sips -z 64 64 "$source" --out "$target/mac032pts2x.png" >/dev/null
+        sips -z 128 128 "$source" --out "$target/mac128pts1x.png" >/dev/null
+        sips -z 256 256 "$source" --out "$target/mac128pts2x.png" >/dev/null
+        cp "$target/mac128pts2x.png" "$target/mac256pts1x.png"
+        sips -z 512 512 "$source" --out "$target/mac256pts2x.png" >/dev/null
+        cp "$target/mac256pts2x.png" "$target/mac512pts1x.png"
+        sips -z 1024 1024 "$source" --out "$target/mac512pts2x.png" >/dev/null
     - name: Build
       run: xcodebuild -project "$XCODE_PROJECT" -scheme "$XCODE_SCHEME" archive CODE_SIGN_IDENTITY="$CODE_SIGN_IDENTITY" -archivePath "$BUILD_DIR/$XCODE_ARCHIVE"
     - name: Test
@@ -42,5 +56,5 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        name: Build
+        name: SnapGrid
         path: ${{ env.DMG_FILE_NAME }}

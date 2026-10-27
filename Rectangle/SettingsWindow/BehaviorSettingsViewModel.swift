@@ -66,7 +66,7 @@ final class BehaviorSettingsViewModel {
     
     var greenButtonOverride: Bool {
         didSet {
-            Defaults.greenButtonOverrideIsEnabled = greenButtonOverride
+            Defaults.greenButtonOverride.enabled = greenButtonOverride
             Notification.Name.greenButtonOverride.post()
         }
     }
