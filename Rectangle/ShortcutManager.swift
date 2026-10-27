@@ -576,7 +576,7 @@ private final class SnapLayoutPickerPanel: NSPanel {
         root.addArrangedSubview(subtitle)
 
         let supportedActions: [WindowAction] = [
-            .leftHalf, .rightHalf, .topHalf, .bottomHalf,
+            .maximize, .leftHalf, .rightHalf, .topHalf, .bottomHalf,
             .topLeft, .topRight, .bottomLeft, .bottomRight,
             .firstThird, .centerThird, .lastThird,
             .firstTwoThirds, .centerTwoThirds, .lastTwoThirds
