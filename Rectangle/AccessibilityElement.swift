@@ -411,9 +411,13 @@ class AccessibilityElement {
         AXUIElementPerformAction(wrappedElement, kAXRaiseAction as CFString)
     }
 
-    /// Minimizes this window using the action exposed by its owning app.
+    /// Minimizes this window through the standard Accessibility attribute.
     func minimize() -> Bool {
-        AXUIElementPerformAction(wrappedElement, kAXMinimizeAction as CFString) == .success
+        AXUIElementSetAttributeValue(
+            wrappedElement,
+            NSAccessibility.Attribute.minimized.rawValue as CFString,
+            kCFBooleanTrue
+        ) == .success
     }
 
     func bringToFront(force: Bool = false) {
