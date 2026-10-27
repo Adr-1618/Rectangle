@@ -34,7 +34,7 @@ These are starting defaults only; every binding can be changed or disabled in Se
 | Four screen corners | Control + Option + Shift + Arrow |
 | Open visual layout picker | Control + Option + Z |
 
-The final mapping remains open for review. In particular, the Down action may follow Windows behavior by restoring a snapped/maximized window first and minimizing it on the next press, or it may only restore.
+The final key bindings remain open for review. The Down behavior is decided: the first press restores a snapped or maximized window to its previous frame; a second press minimizes it.
 
 ### Snap input
 
@@ -80,15 +80,18 @@ Settings should include:
 - Keep source work, design decisions, and review branches on GitHub. Do not create a local source clone.
 - Use GitHub Actions with a macOS runner for remote build and verification if the repository's workflow supports it. Do not claim a build passed unless CI reports success.
 
+## Decision recorded
+
+- **Control + Option + Down:** first press restores a snapped or maximized window to its previous frame; a second press minimizes it, matching Windows behavior.
+
 ## Review decisions still open
 
 1. Product name, app name, and icon.
 2. Final default shortcut map and whether users can choose modifier presets.
-3. Whether the Down shortcut restores then minimizes, or only restores.
-4. Whether Snap Assist appears automatically after a snap or only on request.
-5. Which custom ratios and spacing controls are included in the first release.
-6. Exact multi-display cycling behavior.
-7. Minimum macOS version and the remote build/release workflow.
+3. Whether Snap Assist appears automatically after a snap or only on request.
+4. Which custom ratios and spacing controls are included in the first release.
+5. Exact multi-display cycling behavior.
+6. Minimum macOS version and the remote build/release workflow.
 
 ## Acceptance criteria for the first implementation phase
 
