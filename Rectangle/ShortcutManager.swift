@@ -362,8 +362,8 @@ class ShortcutManager {
 
         keyDown.flags = [.maskControl, .maskCommand]
         keyUp.flags = [.maskControl, .maskCommand]
-        CGEventPostToPid(processID, keyDown)
-        CGEventPostToPid(processID, keyUp)
+        keyDown.postToPid(processID)
+        keyUp.postToPid(processID)
     }
 
     /// Mouse buttons work on the focused window, like keys, unless they've
