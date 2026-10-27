@@ -575,31 +575,21 @@ private final class SnapLayoutPickerPanel: NSPanel {
         subtitle.textColor = .secondaryLabelColor
         root.addArrangedSubview(subtitle)
 
-        addRow(title: String(localized: "Halves"), actions: [
-            (.leftHalf, "Left half", "rectangle.lefthalf.filled"),
-            (.rightHalf, "Right half", "rectangle.righthalf.filled"),
-            (.topHalf, "Top half", "rectangle.tophalf.filled"),
-            (.bottomHalf, "Bottom half", "rectangle.bottomhalf.filled")
-        ], to: root)
-
-        addRow(title: String(localized: "Quarters"), actions: [
-            (.topLeft, "Top left", "rectangle.topthird.inset.filled"),
-            (.topRight, "Top right", "rectangle.topthird.inset.filled"),
-            (.bottomLeft, "Bottom left", "rectangle.bottomthird.inset.filled"),
-            (.bottomRight, "Bottom right", "rectangle.bottomthird.inset.filled")
-        ], to: root)
-
-        addRow(title: String(localized: "Thirds"), actions: [
-            (.firstThird, "Left third", "rectangle.lefthalf.inset.filled"),
-            (.centerThird, "Center third", "rectangle.center.inset.filled"),
-            (.lastThird, "Right third", "rectangle.righthalf.inset.filled")
-        ], to: root)
-
-        addRow(title: String(localized: "Two-thirds"), actions: [
-            (.firstTwoThirds, "Left two-thirds", "rectangle.lefthalf.filled"),
-            (.centerTwoThirds, "Center two-thirds", "rectangle.center.inset.filled"),
-            (.lastTwoThirds, "Right two-thirds", "rectangle.righthalf.filled")
-        ], to: root)
+        let supportedActions: [WindowAction] = [
+            .leftHalf, .rightHalf, .topHalf, .bottomHalf,
+            .topLeft, .topRight, .bottomLeft, .bottomRight,
+            .firstThird, .centerThird, .lastThird,
+            .firstTwoThirds, .centerTwoThirds, .lastTwoThirds
+        ]
+        let actionByID = Dictionary(uniqueKeysWithValues: supportedActions.map { ($0.rawValue, $0) })
+        let defaultOrder = supportedActions.map(\\.rawValue)
+        let order = Defaults.snapPickerActionOrder.typedValue ?? defaultOrder
+        let hidden = Defaults.snapPickerHiddenActions.typedValue ?? []
+        let visibleActions = order.compactMap { rawValue -> WindowAction? in
+            guard !hidden.contains(rawValue) else { return nil }
+            return actionByID[rawValue]
+        }
+        addLayoutGrid(actions: visibleActions, to: root)
 
         let cancel = NSButton(title: String(localized: "Cancel"), target: self, action: #selector(cancelSelection))
         cancel.bezelStyle = .rounded
@@ -622,26 +612,36 @@ private final class SnapLayoutPickerPanel: NSPanel {
         return container
     }
 
-    private func addRow(title: String, actions: [(WindowAction, String, String)], to root: NSStackView) {
-        let label = NSTextField(labelWithString: title)
+    private func addLayoutGrid(actions: [WindowAction], to root: NSStackView) {
+        let label = NSTextField(labelWithString: String(localized: "Available positions"))
         label.font = .boldSystemFont(ofSize: 13)
         root.addArrangedSubview(label)
 
-        let row = NSStackView()
-        row.orientation = .horizontal
-        row.distribution = .fillEqually
-        row.spacing = 8
-        for (action, title, symbol) in actions {
-            let button = NSButton(title: title, target: self, action: #selector(selectLayout(_:)))
-            button.tag = action.rawValue
-            button.bezelStyle = .rounded
-            button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: title)
-            button.imagePosition = .imageAbove
-            button.setButtonType(.momentaryPushIn)
-            button.heightAnchor.constraint(equalToConstant: 58).isActive = true
-            row.addArrangedSubview(button)
+        guard !actions.isEmpty else {
+            let emptyState = NSTextField(labelWithString: String(localized: "All positions are hidden. Enable one in Settings to use the picker."))
+            emptyState.textColor = .secondaryLabelColor
+            root.addArrangedSubview(emptyState)
+            return
         }
-        root.addArrangedSubview(row)
+
+        for start in stride(from: 0, to: actions.count, by: 4) {
+            let row = NSStackView()
+            row.orientation = .horizontal
+            row.distribution = .fillEqually
+            row.spacing = 8
+            for action in actions[start..<min(start + 4, actions.count)] {
+                let title = action.displayName ?? action.name
+                let button = NSButton(title: title, target: self, action: #selector(selectLayout(_:)))
+                button.tag = action.rawValue
+                button.bezelStyle = .rounded
+                button.image = action.image
+                button.imagePosition = .imageAbove
+                button.setButtonType(.momentaryPushIn)
+                button.heightAnchor.constraint(equalToConstant: 64).isActive = true
+                row.addArrangedSubview(button)
+            }
+            root.addArrangedSubview(row)
+        }
     }
 
     @objc private func selectLayout(_ sender: NSButton) {

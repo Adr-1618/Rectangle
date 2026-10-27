@@ -174,6 +174,34 @@ final class BehaviorSettingsViewModel {
     var restoreThenMinimize: Bool {
         didSet { Defaults.restoreThenMinimize.enabled = restoreThenMinimize }
     }
+
+    var snapPickerActionOrder: [Int] {
+        didSet { Defaults.snapPickerActionOrder.typedValue = snapPickerActionOrder }
+    }
+
+    var snapPickerHiddenActions: Set<Int> {
+        didSet { Defaults.snapPickerHiddenActions.typedValue = snapPickerHiddenActions }
+    }
+
+    func snapPickerBinding(for action: WindowAction) -> Binding<Bool> {
+        Binding(
+            get: { !self.snapPickerHiddenActions.contains(action.rawValue) },
+            set: { isVisible in
+                if isVisible {
+                    self.snapPickerHiddenActions.remove(action.rawValue)
+                } else {
+                    self.snapPickerHiddenActions.insert(action.rawValue)
+                }
+            }
+        )
+    }
+
+    func moveSnapPickerAction(_ rawValue: Int, by offset: Int) {
+        guard let index = snapPickerActionOrder.firstIndex(of: rawValue) else { return }
+        let destination = index + offset
+        guard snapPickerActionOrder.indices.contains(destination) else { return }
+        snapPickerActionOrder.swapAt(index, destination)
+    }
     
     // MARK: - Stage Manager Settings
     var stageSize: Double
@@ -209,6 +237,10 @@ final class BehaviorSettingsViewModel {
         self.combinedDisplayMode = Defaults.combinedDisplayMode.userEnabled
         self.repeatedMaximizeRestoresPrevious = Defaults.repeatedMaximizeRestoresPrevious.enabled
         self.restoreThenMinimize = Defaults.restoreThenMinimize.enabled ?? true
+        self.snapPickerActionOrder = Defaults.snapPickerActionOrder.typedValue ?? [0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23]
+        self.snapPickerHiddenActions = Defaults.snapPickerHiddenActions.typedValue ?? []
+        self.snapPickerActionOrder = Defaults.snapPickerActionOrder.typedValue ?? [0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23]
+        self.snapPickerHiddenActions = Defaults.snapPickerHiddenActions.typedValue ?? []
         self.restoreThenMinimize = Defaults.restoreThenMinimize.enabled ?? true
         
         self.todoEnabled = Defaults.todo.userEnabled

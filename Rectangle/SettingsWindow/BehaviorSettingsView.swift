@@ -113,6 +113,38 @@ struct BehaviorSettingsView: View {
             }
             
             
+            // MARK: - Snap Layout Picker
+            Section("Snap Layout Picker") {
+                Text("Choose which positions appear and arrange their order. Open the picker with Control + Option + Z.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                ForEach(viewModel.snapPickerActionOrder, id: \\.self) { rawValue in
+                    if let action = WindowAction(rawValue: rawValue) {
+                        HStack {
+                            Toggle(action.displayName ?? action.name, isOn: viewModel.snapPickerBinding(for: action))
+                            Spacer()
+                            let index = viewModel.snapPickerActionOrder.firstIndex(of: rawValue) ?? 0
+                            Button {
+                                viewModel.moveSnapPickerAction(rawValue, by: -1)
+                            } label: {
+                                Image(systemName: "arrow.up")
+                            }
+                            .help("Move up")
+                            .disabled(index == 0)
+
+                            Button {
+                                viewModel.moveSnapPickerAction(rawValue, by: 1)
+                            } label: {
+                                Image(systemName: "arrow.down")
+                            }
+                            .help("Move down")
+                            .disabled(index == viewModel.snapPickerActionOrder.count - 1)
+                        }
+                    }
+                }
+            }
+
             // MARK: - Maximize
             Section {
                 CustomDisclosureGroup {
