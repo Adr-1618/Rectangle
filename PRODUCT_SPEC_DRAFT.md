@@ -55,8 +55,8 @@ The final key bindings remain open for review. The Down behavior is decided: the
 
 ### Snap Assist
 
-- After a window is snapped, optionally show other eligible windows that could fill the remaining regions.
-- Snap Assist is configurable: users can enable/disable it, choose when it appears, and dismiss it.
+- After a window is snapped, automatically show other eligible windows that could fill the remaining regions.
+- This is the default Windows-style behavior. Settings can disable Snap Assist or change it to appear only when requested.
 - It must not move or resize another window until the user selects that window and a target region.
 - Respect minimum window sizes and report when an app cannot fit a selected region.
 
@@ -84,14 +84,22 @@ Settings should include:
 
 - **Control + Option + Down:** first press restores a snapped or maximized window to its previous frame; a second press minimizes it, matching Windows behavior.
 
-## Review decisions still open
+## Proposed default configuration
 
-1. Product name, app name, and icon.
-2. Final default shortcut map and whether users can choose modifier presets.
-3. Whether Snap Assist appears automatically after a snap or only on request.
-4. Which custom ratios and spacing controls are included in the first release.
-5. Exact multi-display cycling behavior.
-6. Minimum macOS version and the remote build/release workflow.
+All defaults below can be changed in Settings.
+
+- **Shortcuts:** use the proposed Control + Option mappings in Phase 1; every binding, including the layout picker, can be recorded, changed, disabled, and reset.
+- **Snap Assist:** enabled and shown automatically after a snap. Users can turn it off or set it to appear only on request.
+- **Layouts:** include halves, quarters, thirds, and two-thirds. Users can hide, reorder, and edit supported ratios and gaps.
+- **Displays:** snap to the display containing the focused window. Moving a window to another display is an explicit action, not a side effect of repeating a snap shortcut.
+- **Animation:** enabled by default, while respecting the macOS Reduce Motion setting; users can change it.
+- **Launch at login:** available as an opt-in setting, off by default.
+- **Minimum macOS version:** target macOS 14 or later, matching the current upstream requirement; verify this in the remote build before implementation is considered ready.
+- **Builds:** use GitHub Actions on a macOS runner when available; keep source and review work on GitHub.
+
+## Deferred until branding and release
+
+- Product name, app name, icon, and final bundle identifier. The development app must have a distinct identity from installed Rectangle before both can be run together.
 
 ## Acceptance criteria for the first implementation phase
 
