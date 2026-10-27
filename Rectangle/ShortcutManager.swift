@@ -582,7 +582,7 @@ private final class SnapLayoutPickerPanel: NSPanel {
             .firstTwoThirds, .centerTwoThirds, .lastTwoThirds
         ]
         let actionByID = Dictionary(uniqueKeysWithValues: supportedActions.map { ($0.rawValue, $0) })
-        let defaultOrder = supportedActions.map(\\.rawValue)
+        let defaultOrder = supportedActions.map(\.rawValue)
         let order = Defaults.snapPickerActionOrder.typedValue ?? defaultOrder
         let hidden = Defaults.snapPickerHiddenActions.typedValue ?? []
         let visibleActions = order.compactMap { rawValue -> WindowAction? in

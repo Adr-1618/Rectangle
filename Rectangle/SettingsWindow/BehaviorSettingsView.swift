@@ -119,7 +119,7 @@ struct BehaviorSettingsView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
 
-                ForEach(viewModel.snapPickerActionOrder, id: \\.self) { rawValue in
+                ForEach(viewModel.snapPickerActionOrder, id: \.self) { rawValue in
                     if let action = WindowAction(rawValue: rawValue) {
                         HStack {
                             Toggle(action.displayName ?? action.name, isOn: viewModel.snapPickerBinding(for: action))
