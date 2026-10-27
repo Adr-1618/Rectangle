@@ -232,7 +232,8 @@ class ShortcutManager {
         defer { if !completionHandledByWindowManager { originalParameters.completion?() } }
         Notification.Name.windowActionWillExecute.post(object: parameters)
 
-        if parameters.action == .restore,
+        if Defaults.restoreThenMinimize.enabled != false,
+           parameters.action == .restore,
            let windowElement = parameters.windowElement ?? AccessibilityElement.getFrontWindowElement(),
            let windowId = parameters.windowId ?? windowElement.getWindowId(),
            let restoreRect = AppDelegate.windowHistory.restoreRects[windowId],

@@ -32,6 +32,7 @@ class Defaults {
     static let resizeOnDirectionalMove = BoolDefault(key: "resizeOnDirectionalMove")
     static let halvesPreserveOtherAxisSize = BoolDefault(key: "halvesPreserveOtherAxisSize")
     static let repeatedMaximizeRestoresPrevious = BoolDefault(key: "repeatedMaximizeRestoresPrevious")
+    static let restoreThenMinimize = OptionalBoolDefault(key: "restoreThenMinimize")
     static let moveFixedSizeToEdge = IntEnumDefault<EdgeAlignment>(key: "moveFixedSizeToEdge", defaultValue: .edgesAndCorners)
     static let ignoredSnapAreas = IntDefault(key: "ignoredSnapAreas")
     static let traverseSingleScreen = OptionalBoolDefault(key: "traverseSingleScreen")
@@ -163,6 +164,7 @@ class Defaults {
         resizeOnDirectionalMove,
         halvesPreserveOtherAxisSize,
         repeatedMaximizeRestoresPrevious,
+        restoreThenMinimize,
         ignoredSnapAreas,
         traverseSingleScreen,
         minimumWindowWidth,

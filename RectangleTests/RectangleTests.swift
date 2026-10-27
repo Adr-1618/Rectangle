@@ -2252,7 +2252,7 @@ final class BundleIdentityTests: XCTestCase {
     func testDebugBuildsUseTheirOwnBundleIdentifier() {
         // Keeps a build from Xcode from sharing the installed app's
         // Accessibility permission and preferences.
-        XCTAssertEqual(Bundle.main.bundleIdentifier, "com.knollsoft.Rectangle.debug")
+        XCTAssertEqual(Bundle.main.bundleIdentifier, "io.github.adr1618.windowmanager.debug")
     }
 
     func testExportedConfigKeepsTheReleaseBundleIdentifier() throws {

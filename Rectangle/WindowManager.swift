@@ -82,7 +82,11 @@ class WindowManager {
                 return
             }
             if let restoreRect = AppDelegate.windowHistory.restoreRects[windowId] {
-                AppDelegate.windowHistory.armRestoreMinimize(windowID: windowId)
+                if Defaults.restoreThenMinimize.enabled != false {
+                    AppDelegate.windowHistory.armRestoreMinimize(windowID: windowId)
+                } else {
+                    AppDelegate.windowHistory.resetRestoreMinimize(windowID: windowId)
+                }
                 executionID &+= 1
                 let currentExecutionID = executionID
                 completionDeferred = true

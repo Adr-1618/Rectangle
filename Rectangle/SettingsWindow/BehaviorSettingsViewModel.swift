@@ -170,6 +170,10 @@ final class BehaviorSettingsViewModel {
     var repeatedMaximizeRestoresPrevious: Bool {
         didSet { Defaults.repeatedMaximizeRestoresPrevious.enabled = repeatedMaximizeRestoresPrevious }
     }
+
+    var restoreThenMinimize: Bool {
+        didSet { Defaults.restoreThenMinimize.enabled = restoreThenMinimize }
+    }
     
     // MARK: - Stage Manager Settings
     var stageSize: Double
@@ -204,6 +208,8 @@ final class BehaviorSettingsViewModel {
         self.experimentalAnimations = Defaults.experimentalWindowAnimations.enabled
         self.combinedDisplayMode = Defaults.combinedDisplayMode.userEnabled
         self.repeatedMaximizeRestoresPrevious = Defaults.repeatedMaximizeRestoresPrevious.enabled
+        self.restoreThenMinimize = Defaults.restoreThenMinimize.enabled ?? true
+        self.restoreThenMinimize = Defaults.restoreThenMinimize.enabled ?? true
         
         self.todoEnabled = Defaults.todo.userEnabled
         self.todoSidebarWidth = Defaults.todoSidebarWidth.value
