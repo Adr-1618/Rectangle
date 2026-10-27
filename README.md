@@ -24,6 +24,12 @@ Or install with brew cask:
 brew install --cask rectangle
 ```
 
+## Custom trackpad gestures (experimental)
+
+SnapGrid can record a continuous shape drawn with three fingers and run an editable, ordered action sequence when it recognizes that shape. For example, record an X and add **Open Application** to launch Finder. Other steps can arrange a window, run an Apple Shortcut, take a screenshot, or wait before the next step. Gestures are off by default and can be managed in **Preferences > Gestures**.
+
+Gesture capture requires **Input Monitoring** permission. SnapGrid reads the trackpad through Apple's private `MultitouchSupport.framework`, which is not a supported public API and may stop working after a macOS update. Recognition is experimental, and macOS trackpad gestures may conflict. The app does not send gesture data to a server.
+
 ## How to use it
 
 The [keyboard shortcuts](https://support.apple.com/guide/mac-help/what-are-those-symbols-shown-in-menus-cpmh0011/mac) are self explanatory, but the snap areas can use some explanation if you've never used them on Windows or other window management apps.
