@@ -897,6 +897,8 @@ enum WindowAction: Int, Codable {
         case .displayOne, .displayTwo, .displayThree, .displayFour, .displayFive,
              .displaySix, .displaySeven, .displayEight, .displayNine:
             return NSImage(imageLiteralResourceName: "nextDisplayTemplate")
+        case .snapLayoutPicker:
+            return NSImage(systemSymbolName: "rectangle.split.2x2", accessibilityDescription: "Snap layouts") ?? NSImage()
         }
     }
 
@@ -959,7 +961,7 @@ enum WindowAction: Int, Codable {
         case .maximizeHeight:
             return Defaults.applyGapsToMaximizeHeight.userDisabled ? .none : .vertical;
         case .almostMaximize, .previousDisplay, .nextDisplay, .larger, .smaller, .largerWidth, .smallerWidth, .largerHeight, .smallerHeight, .center, .centerProminently, .restore, .specified, .reverseAll, .tileAll, .tileRows, .tileColumns, .cascadeAll, .cascadeActiveApp, .tileActiveApp,
-             .cycleStackedWindows, .cycleStackedWindowsBackward,
+             .cycleStackedWindows, .cycleStackedWindowsBackward, .snapLayoutPicker,
              .displayOne, .displayTwo, .displayThree, .displayFour, .displayFive,
              .displaySix, .displaySeven, .displayEight, .displayNine:
             return .none
