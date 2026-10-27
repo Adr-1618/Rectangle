@@ -692,7 +692,7 @@ final class SnapAssistPanel: NSPanel {
     }
 
     static func offer(for result: ResultParameters) {
-        guard Defaults.snapAssist.enabled,
+        guard Defaults.snapAssist.enabled != false,
               result.source != .snapAssist,
               let snappedWindowId = result.windowId,
               result.action == .leftHalf || result.action == .rightHalf

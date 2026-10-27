@@ -241,7 +241,7 @@ final class BehaviorSettingsViewModel {
         self.combinedDisplayMode = Defaults.combinedDisplayMode.userEnabled
         self.repeatedMaximizeRestoresPrevious = Defaults.repeatedMaximizeRestoresPrevious.enabled
         self.restoreThenMinimize = Defaults.restoreThenMinimize.enabled ?? true
-        self.snapAssist = Defaults.snapAssist.enabled
+        self.snapAssist = Defaults.snapAssist.enabled ?? true
         self.snapPickerActionOrder = Defaults.snapPickerActionOrder.typedValue ?? [0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23]
         self.snapPickerHiddenActions = Defaults.snapPickerHiddenActions.typedValue ?? []
         self.snapPickerActionOrder = Defaults.snapPickerActionOrder.typedValue ?? [0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23]

@@ -35,7 +35,7 @@ class Defaults {
     static let restoreThenMinimize = OptionalBoolDefault(key: "restoreThenMinimize")
     static let snapPickerActionOrder = JSONDefault<[Int]>(key: "snapPickerActionOrder", defaultValue: [0, 1, 11, 10, 15, 16, 13, 14, 20, 22, 24, 21, 84, 23])
     static let snapPickerHiddenActions = JSONDefault<Set<Int>>(key: "snapPickerHiddenActions", defaultValue: [])
-    static let snapAssist = BoolDefault(key: "snapAssist", defaultValue: true)
+    static let snapAssist = OptionalBoolDefault(key: "snapAssist")
     static let moveFixedSizeToEdge = IntEnumDefault<EdgeAlignment>(key: "moveFixedSizeToEdge", defaultValue: .edgesAndCorners)
     static let ignoredSnapAreas = IntDefault(key: "ignoredSnapAreas")
     static let traverseSingleScreen = OptionalBoolDefault(key: "traverseSingleScreen")
