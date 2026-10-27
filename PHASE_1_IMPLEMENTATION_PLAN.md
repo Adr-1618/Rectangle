@@ -89,11 +89,11 @@ Start only after Phase 1 meets its acceptance criteria:
 ## Implementation progress
 
 - Phase 1 quick actions and the configurable visual zone picker are implemented on this branch.
-- The first Snap Assist slice now suggests up to eight visible windows from other apps after a left/right half snap. It places a selected window in the opposite half and does not move suggestions before selection.
+- Snap Assist suggests up to eight visible windows from other apps after a supported half, third, two-thirds, quarter, or vertical third/two-thirds snap. It places a selected window in the complementary region and does not move suggestions before selection. Hidden Snap Layout Picker destinations are respected.
 - Snap Assist is enabled by default and can be disabled in Behavior settings. Window titles are not read by this feature.
 - GitHub Actions run [40515648038](https://github.com/Adr-1618/Rectangle/actions/runs/40515648038) built and tested the feature commit and produced the `Build` artifact.
 - Manual checks remain: Accessibility permission, both snap directions, selecting and dismissing suggestions, disabling Snap Assist, and behavior across displays.
-- Snap Assist currently supports half snaps only. Other zones, same-app window suggestions, and richer per-layout behavior remain future work.
+- Snap Assist currently supports contiguous complementary pairs only; centered and corner layouts that leave multiple separate openings are not offered yet. Same-app window suggestions and a visual choice among multiple remaining zones remain future work.
 
 ## Phase 1 acceptance criteria
 

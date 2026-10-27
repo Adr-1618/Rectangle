@@ -695,7 +695,8 @@ final class SnapAssistPanel: NSPanel {
         guard Defaults.snapAssist.enabled != false,
               result.source != .snapAssist,
               let snappedWindowId = result.windowId,
-              result.action == .leftHalf || result.action == .rightHalf
+              let destination = complementaryAction(for: result.action),
+              !(Defaults.snapPickerHiddenActions.typedValue ?? []).contains(destination.rawValue)
         else { return }
 
         let screen = result.calcResult.screen
@@ -726,9 +727,32 @@ final class SnapAssistPanel: NSPanel {
             return Candidate(windowId: info.id, pid: info.pid, appName: name, label: label)
         }
 
-        let destination: WindowAction = result.action == .leftHalf ? .rightHalf : .leftHalf
         DispatchQueue.main.async {
             shared.present(candidates: Array(candidates), on: screen, destination: destination)
+        }
+    }
+
+    /// Pair layouts that leave one contiguous, familiar region for another window.
+    /// The existing Rectangle calculations apply the user's split ratios and gaps.
+    private static func complementaryAction(for action: WindowAction) -> WindowAction? {
+        switch action {
+        case .leftHalf: return .rightHalf
+        case .rightHalf: return .leftHalf
+        case .topHalf: return .bottomHalf
+        case .bottomHalf: return .topHalf
+        case .firstThird: return .lastTwoThirds
+        case .lastTwoThirds: return .firstThird
+        case .lastThird: return .firstTwoThirds
+        case .firstTwoThirds: return .lastThird
+        case .topVerticalThird: return .bottomVerticalTwoThirds
+        case .bottomVerticalTwoThirds: return .topVerticalThird
+        case .bottomVerticalThird: return .topVerticalTwoThirds
+        case .topVerticalTwoThirds: return .bottomVerticalThird
+        case .firstFourth: return .lastThreeFourths
+        case .lastThreeFourths: return .firstFourth
+        case .lastFourth: return .firstThreeFourths
+        case .firstThreeFourths: return .lastFourth
+        default: return nil
         }
     }
 

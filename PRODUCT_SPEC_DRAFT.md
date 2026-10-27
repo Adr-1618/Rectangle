@@ -73,7 +73,7 @@ The final key bindings remain open for review. The Down behavior is decided: the
 - It must not move or resize another window until the user selects that window and a target region.
 - Respect minimum window sizes and report when an app cannot fit a selected region.
 
-**Current prototype scope:** Snap Assist appears after a left- or right-half snap and offers up to eight visible windows from other apps. It shows app names and icons without reading window titles. Choosing one places it in the complementary half; dismissing or doing nothing leaves it unchanged. A Behavior setting turns it on or off. Support for other zones remains future work.
+**Current prototype scope:** Snap Assist supports complementary pairs for halves, thirds, two-thirds, quarters, and vertical thirds/two-thirds. It offers up to eight visible windows from other apps and shows app names and icons without reading window titles. Choosing one places it in the matching complementary zone; dismissing or doing nothing leaves it unchanged. Destinations hidden in the Snap Layout Picker are not suggested. The Behavior setting turns Snap Assist on or off.
 
 ## Settings and customization
 
